@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "flag.h"
 
 #ifndef MAX_CIPH_RAILS
 #define MAX_CIPH_RAILS 256
@@ -15,11 +16,14 @@
 #define DEFAULT_NUM_RAILS 2
 #endif
 
+const char * USAGE_MESSAGE = "Usage: [OPTIONS] [PLAIN_TEXT]\n";
+
 char * ciph_rails[MAX_CIPH_RAILS];
 char * cipher_text;
 
 void rail_num_invalid(int num_rails) {
-	printf("Invalid number of cipher rails: %d\n", num_rails);
+	printf("Invalid number of cipher rails: %d\nMax number of cipher rails: %d\n", num_rails, MAX_CIPH_RAILS);
+	fputs(USAGE_MESSAGE, stdout);
 }
 
 int rail_num_valid(int num_rails) {
@@ -83,19 +87,67 @@ int main(int argc, const char * argv[]) {
 	size_t pt_str_len;
 	int num_rails;
 	if (argc == 1) {
-		fputs("Input Plain Text Here: ", stdout);
-		getline(&pt, &pt_str_len, stdin);
+		// Get plain text
+		fputs("Plain Text: ", stdout);
+		while (!(getline(&pt, &pt_str_len, stdin)));
 		strtok(pt,"\n");
-		fputs("Input Number of Rails: ", stdout);
-		scanf("%d", &num_rails);
+
+		// Get number of rails
+		fputs("# of Rails: ", stdout);
+		while(!(scanf("%i", &num_rails)));
+
+		printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
 		encipher(pt, pt_str_len, num_rails);
 		printf("%s\n", cipher_text);
 		return 0;
 	}
-	else if (argc > 1) {
-		return 0;
+	else if (argc == 2) {
+		int aol = strlen(argv[1]);
+		if (is_flag(argv[1], aol)) {
+			// Get flag value and convert to integer for number of rails
+			char * flag;
+			get_flag(argv[1], aol, &flag);
+			printf("Flag: %s\n", flag);
+			num_rails = atoi(flag);
+			printf("NUM_RAILS: %i\n", num_rails);
+
+			// Get plain text
+			fputs("Plain Text: ", stdout);
+			while(!(getline(&pt, &pt_str_len, stdin)));
+			strtok(pt,"\n");
+
+			encipher(pt, pt_str_len, num_rails);
+			printf("%s\n", cipher_text);
+			return 0;
+		}
+		else {
+			// Copy argv[1] to plain text
+			pt = malloc(sizeof(char) * aol);
+			strncpy(pt, argv[1], aol);
+			pt_str_len = aol;
+			strtok(pt,"\n");
+
+			// Get number of rails
+			fputs("# of Rails: ", stdout);
+			while(!(scanf("%i", &num_rails)));
+
+			encipher(pt, pt_str_len, num_rails);
+		}
+	}
+	else if (argc == 3) {
+		int aol, aot;
+		aol = strlen(argv[1]);
+		aot = strlen(argv[2]);
+		if (is_flag(argv[1], aol)) {
+			return 0;
+		}
+		else {
+			fputs(USAGE_MESSAGE, stdout);
+			return 1;
+		}
 	}
 	else {
+		fputs(USAGE_MESSAGE, stdout);
 		return 1;
 	}
 }
