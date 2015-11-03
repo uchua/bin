@@ -1,6 +1,6 @@
 /*
- * Simple Rail Fence Cipher
- * Author: Ian Lantzy
+ *	Simple Rail Fence Cipher
+ *	Author: Ian Lantzy
 */
 
 #include <stdlib.h>
