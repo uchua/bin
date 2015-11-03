@@ -9,7 +9,10 @@ CPPFLAGS=-std=c++11 -O2 -w
 CPPEFLAGS=-std=c++11 -O3 -funroll -Wall
 
 # Make everything
-all: rfciph wordcount
+all: ntime rfciph wordcount
+
+ntime:
+	$(CPPC) $(CPPFLAGS) src/ntime.cpp -o ntime
 
 rfciph:
 	$(CC) $(CFLAGS) src/rfciph.c -o rfciph
