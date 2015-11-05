@@ -9,27 +9,32 @@ CPPFLAGS=-std=c++11 -O2 -w
 CPPEFLAGS=-std=c++11 -O3 -funroll -Wall
 
 # Make everything
-all: rfciph wordcount
+all: lib rfciph wordcount
+
+lib:
+	$(CC) $(CFLAGS) -c -o dattyp.o src/dattyp.c
 
 rfciph:
-	$(CC) $(CFLAGS) src/rfciph.c -o rfciph
+	$(CC) $(CFLAGS) -o rfciph src/rfciph.c
 
 wordcount:
 	$(CPPC) $(CPPFLAGS) src/wordcount.cpp -o wordcount
 
-all-experimental: exp-flags all
+all-exp: exp-flags all
 
 exp-flags:
 	CFLAGS=$(CEFLAGS)
 	CPPFLAGS=$(CPPEFLAGS)
 
 # Clean everything
-clean: clean-binaries
-	-rm -f *.o
+clean: clean-obj clean-binaries
 
 clean-binaries:
 	-rm -f rfciph
 	-rm -f wordcount
+
+clean-obj:
+	-rm -f *.o
 
 # Clean everything and make it all again
 remake: clean all
