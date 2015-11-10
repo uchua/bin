@@ -9,7 +9,10 @@ CPPFLAGS=-std=c++11 -O2 -w
 CPPEFLAGS=-std=c++11 -O3 -funroll -Wall
 
 # Make everything
-all: rfciph wordcount
+all: momo rfciph wordcount
+
+momo:
+	$(CC) $(CFLAGS) src/momo.c -o momo -lX11
 
 rfciph:
 	$(CC) $(CFLAGS) src/rfciph.c -o rfciph
