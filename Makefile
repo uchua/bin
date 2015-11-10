@@ -31,6 +31,7 @@ clean: clean-binaries
 	-rm -f *.o
 
 clean-binaries:
+	-rm -f momo
 	-rm -f rfciph
 	-rm -f wordcount
 
