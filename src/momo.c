@@ -17,18 +17,20 @@ int main(int argc, char const *argv[]) {
   XSetErrorHandler(_XlibErrorHandler);
   num_scrn = XScreenCount(display);
 
-  for (i = 0; i < num_scrn; i++) {
-    window = XRootWindow(display, i);
-    if ((r = XQueryPointer(display, window, &wr, &wr, &mo_x, &mo_y, &w_x, &w_y, &mr)) > 0) {
-      break;
-    }
-  }
-
-  if (r) {
-    printf("MoPos:(%d,%d)\n",mo_x,mo_y);
+  if (argc > 1) {
+    // Need flags implemented for this
   }
   else {
-    fputs("ERROR\n",stdout);
+    for (i = 0; i < num_scrn; i++) {
+      window = XRootWindow(display, i);
+      if ((r = XQueryPointer(display, window, &wr, &wr, &mo_x, &mo_y, &w_x, &w_y, &mr)) > 0) {
+        break;
+      }
+    }
+
+    if (r) {
+      printf("%d,%d\n",mo_x,mo_y);
+    }
   }
 
   return 0;
