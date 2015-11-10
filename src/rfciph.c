@@ -3,10 +3,14 @@
  *	Author: Ian Lantzy
 */
 
+#include <ctype.h>
+#include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+#define RFCIPH_MAX_ARGS 4 // Includes the first argument being the call to the program itself
 
 #ifndef MAX_CIPH_RAILS
 #define MAX_CIPH_RAILS 256
@@ -109,7 +113,8 @@ void encipher(char * pt, size_t pt_str_len, int num_rails) {
 int main(int argc, const char * argv[]) {
 	char * pt = NULL; // Set to NULL to avoid segfault w/ getline
 	size_t pt_str_len;
-	int num_rails;
+	int num_rails, opt;
+
 	if (argc == 1) {
 		// Get plain text
 		fputs("Plain Text: ", stdout);
@@ -125,8 +130,62 @@ int main(int argc, const char * argv[]) {
 
 		return 0;
 	}
+	else if (argc == 2) {
+		pt_str_len = strlen(argv[1]);
+		strncpy(pt, argv[1], pt_str_len);
+		strtok(pt, "\n");
+
+		// Get number of rails
+		fputs("# of Rails: ", stdout);
+		while(!(scanf("%i", &num_rails)));
+
+		printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
+		encipher(pt, pt_str_len, num_rails);
+
+		return 0;
+	}
+	else if (argc <= RFCIPH_MAX_ARGS) {
+		num_rails = 0;
+		while ((opt = getopt(argc, argv, "r:")) != -1) {
+			switch (opt) {
+				case 'r' :
+					num_rails = atoi(optarg);
+					break;
+				default:
+					abort();
+					break;
+			}
+		}
+		if (num_rails) {
+			if (argc == RFCIPH_MAX_ARGS) {
+				pt_str_len = strlen(argv[RFCIPH_MAX_ARGS-1]);
+				strncpy(pt, argv[1], pt_str_len);
+				strtok(pt, "\n");
+
+				printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
+				encipher(pt, pt_str_len, num_rails);
+
+				return 0;
+			}
+			else {
+				// Get plain text
+				fputs("Plain Text: ", stdout);
+				while (!(getline(&pt, &pt_str_len, stdin)));
+				strtok(pt,"\n");
+
+				printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
+				encipher(pt, pt_str_len, num_rails);
+
+				return 0;
+			}
+		}
+		else {
+			fputs(USAGE_MESSAGE, stderr);
+			return 1;
+		}
+	}
 	else {
-		fputs(USAGE_MESSAGE, stdout);
+		fputs(USAGE_MESSAGE, stderr);
 		return 1;
 	}
 }
