@@ -11,6 +11,9 @@ Tool to brute force a Caesar / Rail Fence cipher
 ### momo (Mouse Monitor)
 Gives simple mouse information from X11
 
+### ntime (New Time)
+Simple tool to time program execution
+
 ### rfciph (Rail Fence Cipher)
 Basic tool to apply a rail fence cipher to a text string
 
