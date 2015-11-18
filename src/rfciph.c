@@ -112,8 +112,20 @@ void encipher(char * pt, size_t pt_str_len, int num_rails) {
 
 int main(int argc, const char * argv[]) {
 	char * pt = NULL; // Set to NULL to avoid segfault w/ getline
-	size_t pt_str_len;
+	size_t pt_str_len = -1;
 	int num_rails, opt;
+
+	num_rails = 0;
+	while ((opt = getopt(argc, (char * const *)argv, "r:")) != -1) {
+		switch (opt) {
+			case 'r':
+				num_rails = atoi(optarg);
+				break;
+			default:
+				num_rails = -1;
+				break;
+		}
+	}
 
 	if (argc == 1) {
 		// Get plain text
@@ -124,11 +136,10 @@ int main(int argc, const char * argv[]) {
 		// Get number of rails
 		fputs("# of Rails: ", stdout);
 		while(!(scanf("%i", &num_rails)));
-
-		printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
-		encipher(pt, pt_str_len, num_rails);
-
-		return 0;
+	}
+	else if (num_rails < 1) {
+		fputs(USAGE_MESSAGE, stderr);
+		return 1;
 	}
 	else if (argc == 2) {
 		pt_str_len = strlen(argv[1]);
@@ -138,51 +149,23 @@ int main(int argc, const char * argv[]) {
 		// Get number of rails
 		fputs("# of Rails: ", stdout);
 		while(!(scanf("%i", &num_rails)));
+	}
+	else if (argc == 3) {
+		// Get plain text
+		fputs("Plain Text: ", stdout);
+		while (!(getline(&pt, &pt_str_len, stdin)));
+		strtok(pt,"\n");
+	}
+	else if (argc == 4) {
+		pt_str_len = strlen(argv[3]);
+		strncpy(pt, argv[3], pt_str_len);
+		strtok(pt, "\n");
+	}
 
+	if (pt_str_len != -1) {
 		printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
 		encipher(pt, pt_str_len, num_rails);
-
 		return 0;
-	}
-	else if (argc <= RFCIPH_MAX_ARGS) {
-		num_rails = 0;
-		while ((opt = getopt(argc, argv, "r:")) != -1) {
-			switch (opt) {
-				case 'r' :
-					num_rails = atoi(optarg);
-					break;
-				default:
-					abort();
-					break;
-			}
-		}
-		if (num_rails) {
-			if (argc == RFCIPH_MAX_ARGS) {
-				pt_str_len = strlen(argv[RFCIPH_MAX_ARGS-1]);
-				strncpy(pt, argv[1], pt_str_len);
-				strtok(pt, "\n");
-
-				printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
-				encipher(pt, pt_str_len, num_rails);
-
-				return 0;
-			}
-			else {
-				// Get plain text
-				fputs("Plain Text: ", stdout);
-				while (!(getline(&pt, &pt_str_len, stdin)));
-				strtok(pt,"\n");
-
-				printf("PT: %s\nPT_STR_LEN: %d\nNUM_RAILS: %d\n",pt,(int)pt_str_len,num_rails);
-				encipher(pt, pt_str_len, num_rails);
-
-				return 0;
-			}
-		}
-		else {
-			fputs(USAGE_MESSAGE, stderr);
-			return 1;
-		}
 	}
 	else {
 		fputs(USAGE_MESSAGE, stderr);
