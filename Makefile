@@ -9,10 +9,13 @@ CPPFLAGS=-std=c++11 -O2 -w
 CPPEFLAGS=-std=c++11 -O3 -funroll -Wall
 
 # Make everything
-all: lib rfciph wordcount
+all: lib crdeciph rfciph wordcount
 
 lib:
 	$(CC) $(CFLAGS) -c -o dattyp.o src/dattyp.c
+
+crdeciph:
+	$(CC) $(CFLAGS) -o crdeciph src/crdeciph.c
 
 rfciph:
 	$(CC) $(CFLAGS) -o rfciph src/rfciph.c
@@ -30,6 +33,7 @@ exp-flags:
 clean: clean-obj clean-binaries
 
 clean-binaries:
+	-rm -f crdeciph
 	-rm -f rfciph
 	-rm -f wordcount
 
