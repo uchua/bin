@@ -5,6 +5,9 @@ All tools are currently WIP (works in progress) and may-or-may-not do anything w
 All tools are meant to be used in Linux only. More specifically Ubuntu.
 
 ## Tools
+### crdeciph (Caesar Rail Fence Decipher)
+Tool to brute force a Caesar / Rail Fence cipher
+
 ### momo (Mouse Monitor)
 Gives simple mouse information from X11
 
