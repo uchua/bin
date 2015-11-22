@@ -5,6 +5,9 @@
 
 #include <chrono>
 #include <iostream>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -17,10 +20,27 @@ inline void calc_time(TimePointT * start, TimePointT * stop, TimeT * t) {
 }
 
 int main(int argc, char const *argv[]) {
+  int status;
+  pid_t pid;
   TimeT duration;
+
   TimePointT start = ClockT::now();
-  // Execution to be timed here
+  if ((pid = fork()) > 0) {
+    waitpid(pid, &status, 0);
+  }
+  else if (pid == 0) {
+    execvp(argv[1], (char * const *)&argv[1]);
+    exit(0);
+  }
+  else exit(1);
   TimePointT stop = ClockT::now();
+
   calc_time(&start, &stop, &duration);
+  if (pid > 0) {
+    cout << duration.count() << " ns" << endl;
+  }
+  else if (pid < 0) {
+    cout << "ERROR: Failed to start child process!" << endl;
+  }
   return 0;
 }
