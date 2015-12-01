@@ -9,16 +9,13 @@ CPPFLAGS=-std=c++11 -O2 -w
 CPPEFLAGS=-std=c++11 -O3 -funroll -Wall
 
 # Make everything
-all: momo momo rfciph wordcount
+all: momo ntime wordcount
 
 momo:
 	$(CC) $(CFLAGS) src/momo.c -o momo -lX11
 
 ntime:
 	$(CPPC) $(CPPFLAGS) src/ntime.cpp -o ntime
-
-rfciph:
-	$(CC) $(CFLAGS) src/rfciph.c -o rfciph
 
 wordcount:
 	$(CPPC) $(CPPFLAGS) src/wordcount.cpp -o wordcount
@@ -36,7 +33,6 @@ clean: clean-binaries
 clean-binaries:
 	-rm -f momo
 	-rm -f ntime
-	-rm -f rfciph
 	-rm -f wordcount
 
 # Clean everything and make it all again

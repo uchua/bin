@@ -14,8 +14,5 @@ Gives simple mouse information from X11
 ### ntime (New Time)
 Simple tool to time program execution
 
-### rfciph (Rail Fence Cipher)
-Basic tool to apply a rail fence cipher to a text string
-
 ### wordcount (Word Count)
 Counts instances of words from an input string, pipe, or file
