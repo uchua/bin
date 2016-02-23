@@ -16,3 +16,6 @@ Simple tool to time program execution
 
 ### wordcount (Word Count)
 Counts instances of words from an input string, pipe, or file
+
+## Scripts
+- **findin** recursive search script using `cat` and `grep`
