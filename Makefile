@@ -9,7 +9,7 @@ CPPFLAGS=-std=c++11 -O2 -w
 CPPEFLAGS=-std=c++11 -O3 -funroll -Wall
 
 # Make everything
-all: lib crdeciph rfciph wordcount
+all: lib crdeciph momo ntime rfciph wordcount
 
 lib:
 	$(CC) $(CFLAGS) -c -o dattyp.o src/dattyp.c
@@ -19,6 +19,12 @@ crdeciph:
 
 rfciph:
 	$(CC) $(CFLAGS) -o rfciph src/rfciph.c
+
+momo:
+	$(CC) $(CFLAGS) src/momo.c -o momo -lX11
+
+ntime:
+	$(CPPC) $(CPPFLAGS) src/ntime.cpp -o ntime
 
 wordcount:
 	$(CPPC) $(CPPFLAGS) src/wordcount.cpp -o wordcount
@@ -35,6 +41,8 @@ clean: clean-obj clean-binaries
 clean-binaries:
 	-rm -f crdeciph
 	-rm -f rfciph
+	-rm -f momo
+	-rm -f ntime
 	-rm -f wordcount
 
 clean-obj:
